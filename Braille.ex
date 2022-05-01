@@ -3,14 +3,36 @@
 defmodule Braille do
 
   def main do
-    # one()
-    # draw_top_line(16, 1)
-    # draw_top_line(16, 2)
-    # draw_top_line(16, 3)
-    # draw_top_line(16, 4)
 
-    for i <- 1..10 do
-      draw_top_line(i, 4)
+
+    c_top_line = fn len, height ->
+      top_lines = {
+        "\u2809", # ⠉
+        "\u281B", # ⠛
+        "\u283F", # ⠿
+        "\u28FF", # ⣿
+      }
+      Enum.reduce(1..len, "", fn _, acc ->
+        acc <> elem(top_lines, height-1)
+      end)
+    end
+
+    c_bottom_line = fn len, height ->
+      bottom_lines = {
+        "\u28C0", # ⣀
+        "\u28E4", # ⣤
+        "\u28F6", # ⣶
+        "\u28FF", # ⣿
+      }
+      Enum.reduce(1..len, "", fn _, acc ->
+        acc <> elem(bottom_lines, height-1)
+      end)
+    end
+
+    for i <- 1..4 do
+      for j <- 1..10 do
+        draw_line(c_bottom_line, j, i)
+      end
     end
 
     # print(c_circle_sm()<>c_blank()<>c_circle_sm())
@@ -39,33 +61,18 @@ defmodule Braille do
     IO.puts(stuff)
   end
 
-  def c_line len, height do
-    lines = {
-      "\u2809", # ⠉
-      "\u281B", # ⠛
-      "\u283F", # ⠿
-      "\u28FF", # ⣿
-    }
-    Enum.reduce(1..len, "", fn _, acc ->
-      acc <> elem(lines, height-1)
-    end)
-  end
-
-  def draw_top_line len, size do
-
+  def draw_line fun, len, size do
     case size do
-      1 -> rv = c_line(len, 1)
+      1 -> rv = fun.(len, 1)
       IO.puts(rv)
-      2 -> rv = c_line(len, 2)
+      2 -> rv = fun.(len, 2)
       IO.puts(rv)
-      3 -> rv = c_line(len, 3)
+      3 -> rv = fun.(len, 3)
       IO.puts(rv)
-      4 -> rv = c_line(len, 4)
+      4 -> rv = fun.(len, 4)
       IO.puts(rv)
-      _ -> IO.puts("something wrong!")
+      _ -> IO.puts("draw_line: size 1..4 ")
     end
-
-
   end
 end
 
