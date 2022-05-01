@@ -62,16 +62,10 @@ defmodule Braille do
   end
 
   def draw_line fun, len, size do
-    case size do
-      1 -> rv = fun.(len, 1)
-      IO.puts(rv)
-      2 -> rv = fun.(len, 2)
-      IO.puts(rv)
-      3 -> rv = fun.(len, 3)
-      IO.puts(rv)
-      4 -> rv = fun.(len, 4)
-      IO.puts(rv)
-      _ -> IO.puts("draw_line: size 1..4 ")
+    case Enum.member?([1,2,3,4], size) do
+      true -> rv = fun.(len, size)
+        IO.puts(rv)
+      false -> raise("Braille::draw_line: size is of range 1..4")
     end
   end
 end
