@@ -3,7 +3,7 @@
 defmodule Lol do
   def joke() do
     pic =
-      IO.gets("Which NFT you want? (m)onkey (p)epe (i)lluminati (b)igfoot (q)uit? ")
+      IO.gets("Which NFT you want? (m)onkey (p)epe (i)lluminati (b)igfoot or (q)uit? ")
       |> String.trim()
 
     cond do
