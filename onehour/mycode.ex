@@ -1,4 +1,8 @@
 defmodule MyModule do
+  @moduledoc """
+  Well, quite frankly, the best module out there.
+  """
+
   def engine do
     # something
     # name = IO.gets("what's up stranger, what's your name? ") |> String.trim()
@@ -19,8 +23,11 @@ defmodule MyModule do
     IO.puts("Is atom? #{is_atom(:London)}")
 
     range = 1..9
-    IO.puts(range[4])
+    IO.puts(range)
   end
 end
 
-MyModule.engine()
+
+defmodule AnotherModule do
+  MyModule.engine()
+end
