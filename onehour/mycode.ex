@@ -45,7 +45,10 @@ defmodule MyModule do
     IO.puts ":\"Sleaford Mods\" == :\"Sleaford Mods\" is #{:"Sleaford Mods" == :"Sleaford Mods"}"
 
     # Range
-    one_to_ten = 1..10
+    range = 1..10
+    IO.puts "IO.puts 1 in range is #{1 in range}" # 2 in range |> IO.puts
+
+    Enum.each(1..3, &IO.puts/1)
 
   end
 
