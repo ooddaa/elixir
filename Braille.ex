@@ -5,6 +5,11 @@ defmodule MyError do
 end
 
 defmodule Braille do
+  @moduledoc """
+  Draws pictures with Braille code symbols
+  """
+  import Enum
+  import IO
 
   def main do
 
@@ -16,7 +21,7 @@ defmodule Braille do
         "\u283F", # ⠿
         "\u28FF", # ⣿
       }
-      Enum.reduce(1..len, "", fn _, acc ->
+      reduce(1..len, "", fn _, acc ->
         acc <> elem(top_lines, height-1)
       end)
     end
@@ -28,7 +33,7 @@ defmodule Braille do
         "\u28F6", # ⣶
         "\u28FF", # ⣿
       }
-      Enum.reduce(1..len, "", fn _, acc ->
+      reduce(1..len, "", fn _, acc ->
         acc <> elem(bottom_lines, height-1)
       end)
     end
@@ -45,7 +50,7 @@ defmodule Braille do
     # print(c_circle_sm()<>c_blank()<>c_circle_sm())
 
     rect = fn width, height, line_type ->
-      rv = Enum.reduce(1..height, "", fn _, acc ->
+      rv = reduce(1..height, "", fn _, acc ->
         acc <> line_type.(width, 4) <> "\n"
       end)
     end
@@ -61,33 +66,52 @@ defmodule Braille do
 
   end
 
+  @doc """
+  Hz no idea what this is for
+  """
+  @spec one :: none
   def one do
     range = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
     str = ""
 
-    rv = Enum.reduce(range, str, fn val, acc ->
+    rv = reduce(range, str, fn val, acc ->
       acc <> val
     end)
 
-    IO.puts(rv)
+    puts(rv)
   end
 
+  @doc """
+  Prints a whitespace
+  """
   def c_blank, do: " "
 
+  @doc """
+  Returns a ⢎⡱
+  """
+  @spec c_circle_sm :: string
   def c_circle_sm do
     cl = "\u288E" # ⢎
     cr = "\u2871" # ⡱
     cl<>cr        # ⢎⡱
   end
 
+  @doc """
+  Just prints anything to the stdout
+  """
+  @spec print(any) :: none
   def print stuff do
-    IO.puts(stuff)
+    puts(stuff)
   end
 
+  @doc """
+  Draws a line of a specific type (1st arg) equals to length (2nd arg) and height (3rd arg)
+  """
+  @spec draw_line(function, number, number) :: none
   def draw_line fun, len, size do
-    case Enum.member?([1,2,3,4], size) do
+    case member?([1,2,3,4], size) do
       true -> rv = fun.(len, size)
-        IO.puts(rv)
+        puts(rv)
       false -> raise MyError
       # false -> raise("Braille::draw_line: size is of range 1..4")
     end
