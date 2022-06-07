@@ -8,6 +8,9 @@ defmodule Tuples do
 
     fruits2 = put_elem(fruits, 0, "lol")
     puts elem(fruits2, 0)
+
+    fruits3 = { { "hehe" } }
+    puts elem(elem(fruits3, 0), 0)
   end
 
 end
