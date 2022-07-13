@@ -12,6 +12,7 @@ defmodule Maps do
 
   @doc """
   Stringifies map. Hopefully...
+  https://hexdocs.pm/elixir/1.12/typespecs.html
   """
   @spec map_to_strList(Map) :: list(String.t())
   def map_to_strList map do
