@@ -16,10 +16,10 @@ defmodule Maps do
   https://hexdocs.pm/elixir/1.12/typespecs.html
   """
   @spec map_to_strList(Map) :: list(String.t())
-  def map_to_strList map do
-
-    map(map,
-      fn(tuple) -> "#{elem(tuple, 0)} => #{elem(tuple, 1)}" end
+  def map_to_strList(map) do
+    map(
+      map,
+      fn tuple -> "#{elem(tuple, 0)} => #{elem(tuple, 1)}" end
     )
   end
 
@@ -41,7 +41,8 @@ defmodule Maps do
     # veggies = Map.put(veggies, :carrot, "yummy")
     # puts Map.get(veggies, :carrot)
 
-    veggies = %{ tomato: 1, broccoli: 123, cucumber: "lol" } # all keys are atoms
+    # all keys are atoms
+    veggies = %{tomato: 1, broccoli: 123, cucumber: "lol"}
     veggies_ = veggies
     # veggies = %{ "joi" => 1, broccoli: 123, cucumber: "lol" }
     # veggies = %{ "joi" => 1, 123 => 123, cucumber: "lol" }
@@ -59,24 +60,40 @@ defmodule Maps do
     # FILTER
     # https://hexdocs.pm/elixir/1.13/Map.html#filter/2
     filter = fn {key, _val} -> key === :broccoli end
-    broccoli = Enum.filter(Map.to_list(veggies_), filter) # [broccoli: 123]
-    broccoli = Map.filter(veggies_, filter) # %{broccoli: 123}
-    IO.inspect broccoli
+    # [broccoli: 123]
+    Enum.filter(Map.to_list(veggies_), filter)
+    # %{broccoli: 123}
+    Map.filter(veggies_, filter)
+    # |> IO.inspect
 
     # REJECT
     # https://hexdocs.pm/elixir/1.13/Map.html#reject/2
     rejector = fn {key, _val} -> key === :broccoli end
-    no_broccoli = Enum.reject(Map.to_list(veggies_), rejector) # [cucumber: "lol", tomato: 1]
-    no_broccoli = Map.reject(veggies_, rejector) # %{cucumber: "lol", tomato: 1}
-    IO.inspect no_broccoli
+    Enum.reject(Map.to_list(veggies_), rejector)
+    # |> IO.inspect # [cucumber: "lol", tomato: 1]
+
+    Map.reject(veggies_, rejector)
+    # |> IO.inspect # %{cucumber: "lol", tomato: 1}
 
     # POP
     # https://hexdocs.pm/elixir/1.13/Map.html#pop/3
-    remove_broccoli = Map.pop(veggies_, :broccoli) # {123, %{cucumber: "lol", tomato: 1}}
-    IO.inspect remove_broccoli
+    Map.pop(veggies_, :broccoli)
+    # |> IO.inspect # {123, %{cucumber: "lol", tomato: 1}}
+
+    # MERGE
+    Map.merge(veggies_, %{carrots: true})
+    # |> IO.inspect
+
+    Map.merge(
+      veggies_,
+      %{cucumber: "not lol"},
+      fn key, v1, v2 ->
+        if key == :cucumber, do: "it works", else: v2
+      end
+      )
+
+    # |> IO.inspect # %{broccoli: 123, cucumber: "it works", tomato: 1}
   end
-
-
 end
 
 Maps.main()
