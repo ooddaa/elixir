@@ -36,6 +36,7 @@ defmodule MyLists do
     # list_ab = [ list_a | list_b ]
     list_ab = Enum.concat(list_a, list_b) # [1, 2, 3, 4, 5, 6]
     list_ab = Enum.concat([list_a, list_b]) # [1, 2, 3, 4, 5, 6]
+    print Enum.take(list_ab, 4)
 
     # [1 | []] # [1]
     # [1 | [ 2 | []]] # [1,2]
