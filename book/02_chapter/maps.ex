@@ -9,7 +9,7 @@ defmodule Maps do
   # import Map
   # import IO
   import Enum
-  import IO
+  # import IO
 
   @doc """
   Stringifies map. Hopefully...
@@ -47,15 +47,26 @@ defmodule Maps do
     # veggies = %{ "joi" => 1, broccoli: 123, cucumber: "lol" }
     # veggies = %{ "joi" => 1, 123 => 123, cucumber: "lol" }
 
+
     # DELETE
-    #
     # veggies = Map.delete(veggies, "joi")
 
+
     # UPDATE
+    # may add new key
     # https://hexdocs.pm/elixir/1.13/Map.html#update/4
-    # veggies = Map.update(veggies, 123, 0, fn e -> 9 end) # aaa really?
-    # [nine, lol] = Map.values(veggies)
-    # puts nine
+    # if just want to add a new key:value, use Map.put
+    Map.update(veggies, 123, 0, fn e -> 9 end) # aaa really?
+    # |> IO.inspect
+
+    # UPDATE (unsafe version)
+    # equvalent to spreading in JS
+    %{ veggies | :tomato => 0 }
+    # |> IO.inspect
+
+    # would not add non-existing key
+    # %{ veggies | :eggplant => 123 } # (KeyError) key :eggplant not found
+
 
     # FILTER
     # https://hexdocs.pm/elixir/1.13/Map.html#filter/2
@@ -66,6 +77,7 @@ defmodule Maps do
     Map.filter(veggies_, filter)
     # |> IO.inspect
 
+
     # REJECT
     # https://hexdocs.pm/elixir/1.13/Map.html#reject/2
     rejector = fn {key, _val} -> key === :broccoli end
@@ -75,15 +87,18 @@ defmodule Maps do
     Map.reject(veggies_, rejector)
     # |> IO.inspect # %{cucumber: "lol", tomato: 1}
 
+
     # POP
     # https://hexdocs.pm/elixir/1.13/Map.html#pop/3
     Map.pop(veggies_, :broccoli)
     # |> IO.inspect # {123, %{cucumber: "lol", tomato: 1}}
 
+
     # MERGE
     Map.merge(veggies_, %{carrots: true})
     # |> IO.inspect
 
+    # custom logic
     Map.merge(
       veggies_,
       %{cucumber: "not lol"},
@@ -93,6 +108,17 @@ defmodule Maps do
       )
 
     # |> IO.inspect # %{broccoli: 123, cucumber: "it works", tomato: 1}
+
+    # PUT
+    # https://hexdocs.pm/elixir/1.13/Map.html#put/3
+    Map.put(veggies_, :artishock, "yammi")
+    # |> IO.inspect
+
+    # puts value under key, unless key already exists
+    Map.put_new(%{a: 1}, :b, 2)
+    # |> IO.inspect # %{a: 1, b:2}
+    Map.put_new(%{a: 1, b: 2}, :a, 3)
+    # |> IO.inspect # %{a: 1, b:2}
   end
 end
 
