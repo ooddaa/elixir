@@ -22,6 +22,7 @@ defmodule MyRange do
 
     # IMPLEMENTS ENUMERABLE PROTOCOL
     Enum.reduce(1..10, 0, &(&1 + &2)) # |> IO.inspect # 55
+    Enum.sum(1..10) # |> IO.inspect # 55
     Enum.count(1..32) # |> IO.inspect # 32
     Enum.member?(1..45, 8) # |> IO.inspect # true
 

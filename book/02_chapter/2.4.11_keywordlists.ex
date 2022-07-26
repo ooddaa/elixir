@@ -14,7 +14,7 @@ defmodule Kewordlist do
     # options[:"@lol"] |> IO.inspect # :also_true
     # options[:"123"] |> IO.inspect # :numbers_are_ok
 
-    days = [ { :monday, 1 }, { :tuesday, 2} ]
+    days = [ { :monday, 1 }, { :tuesday, 2 } ]
     days2 = [ monday: 1, tuesday: 2 ]
 
     # GET - returns first key match
@@ -24,7 +24,7 @@ defmodule Kewordlist do
     # (days2[:noday] == nil) |> IO.inspect # true
 
 
-    duplicates = [ a: 1, a: 2] # |> IO.inspect # [ a: 1, a: 2]
+    duplicates = [ a: 1, a: 2 ] # |> IO.inspect # [ a: 1, a: 2]
 
     # GET_VALUES
     # returns all values where key matches
