@@ -43,6 +43,11 @@ defmodule Kewordlist do
     # DELETE
     # Keyword.delete(duplicates, :a) |> IO.inspect # []
     # Keyword.delete_first(duplicates, :a) |> IO.inspect # [a: 2]
+
+
+    # MEMBERSHIP
+    # IO.inspect (:monday in days) # false
+    Keyword.has_key?(days, :monday) |> IO.inspect
   end
 
 end
