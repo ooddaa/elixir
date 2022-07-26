@@ -1,4 +1,4 @@
-defmodule IOlibrary do
+defmodule IOlib do
   def main do
     # https://hexdocs.pm/elixir/1.13/Inspect.Opts.html
     IO.inspect([100, 200, 300, :lol], [
@@ -20,4 +20,4 @@ defmodule IOlibrary do
   end
 end
 
-IOlibrary.main()
+IOlib.main()
