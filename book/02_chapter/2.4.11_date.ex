@@ -3,11 +3,13 @@ defmodule MyDateTime do
   def main do
 
     # DATE
+    {:ok, d} = Date.new(2022,7,26) # |> IO.inspect # {:ok, ~D[2022-07-26]}
     date = ~D[2022-07-26]
     date.day # |> IO.inspect # 26
     date.month # |> IO.inspect # 7
     date.year # |> IO.inspect # 2022
     date.calendar # |> IO.inspect # Elixir.Calendar.ISO
+
 
     # COMPARE DATES
     date2 = ~D[2023-07-26]
@@ -86,13 +88,6 @@ defmodule MyDateTime do
 
     # is it within first week?
     Enum.member?(Enum.take(month, 7), ~D[2022-08-02]) # |> IO.inspect # false
-
-
-    # TIME
-    time = ~T[22:05:30.01]
-    time.hour # |> IO.inspect # 22
-    time.minute # |> IO.inspect # 5
-    time.second # |> IO.inspect # 30
   end
 end
 
