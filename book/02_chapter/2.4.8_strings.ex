@@ -30,33 +30,38 @@ defmodule Strings do
 #     """
 
     # CONCATENATION
-    string = ~s(con) <> "cat" <> """
-    enation
-    """ <> <<105, 115>> <> " " <> IO.chardata_to_string(Kernel.to_charlist("👍")) <> IO.chardata_to_string('😁')
+    # string = ~s(con) <> "cat" <> """
+    # enation
+    # """ <> <<105, 115>> <> " " <> IO.chardata_to_string(Kernel.to_charlist("👍")) <> IO.chardata_to_string('😁')
 
-    # and make an IO device while we are at it
-    # https://hexdocs.pm/elixir/1.13/StringIO.html
-    {:ok, pid} = StringIO.open(string)
-    # write to it
-    IO.write(pid, " whopwhop") # {"concatenation\nis 👍😁", " whopwhop"}
+    # # and make an IO device while we are at it
+    # # https://hexdocs.pm/elixir/1.13/StringIO.html
+    # {:ok, pid} = StringIO.open(string)
+    # # write to it
+    # IO.write(pid, " whopwhop") # {"concatenation\nis 👍😁", " whopwhop"}
 
-    # or ask user's input
-    # result of the function is a tuple, not a pid
-    {:ok, res} = StringIO.open(
-      string,
-      fn pid ->
-        input = IO.gets("add smth > ")
-        IO.write(pid, "user said: #{input}")
-        StringIO.contents(pid)
-      end
-    )
-    IO.inspect(res) # {"concatenation\nis 👍😁", "user said: asdff\n"}
-    puts is_pid(res) # false
+    # # or ask user's input
+    # # result of the function is a tuple, not a pid
+    # {:ok, res} = StringIO.open(
+    #   string,
+    #   fn pid ->
+    #     input = IO.gets("add smth > ")
+    #     IO.write(pid, "user said: #{input}")
+    #     StringIO.contents(pid)
+    #   end
+    # )
+    # IO.inspect(res) # {"concatenation\nis 👍😁", "user said: asdff\n"}
+    # puts is_pid(res) # false
 
     # StringIO.contents(pid)
     # |> IO.inspect # {"concatenation\nis 👍😁", " whopwhop"}
     # StringIO.flush(pid)
     # StringIO.close(pid)
+
+
+    # TO STRING
+    # Converts the argument to a string according to the String.Chars protocol.
+    to_string('lol') # |> IO.inspect # "lol"
 
   end
 
