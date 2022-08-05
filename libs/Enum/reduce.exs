@@ -69,9 +69,11 @@ defmodule MyReduce do
         case fun.(x) do
           # can we work with this value?
           [key | values] ->
-            Map.update(acc, key, MapSet.new(values), fn map_set ->
-              Enum.map(values, fn val -> MapSet.put(map_set, val)end)
-            end)
+            Map.update(acc, key, MapSet.new(values),
+              fn map_set ->
+                Enum.map(values, fn val -> MapSet.put(map_set, val) end)
+              end
+            )
           # cannot work with this value, go on
           true -> acc
         end
