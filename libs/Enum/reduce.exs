@@ -44,11 +44,40 @@ defmodule MyReduce do
         case fun.(x) do
           [key | values] -> Map.put(acc, key, values)
           true -> acc
-          end
+        end
       end
     )
   end
 
+  @doc """
+  [
+  ["key1", "val1", "val2", "val1"],
+  ["key2", "val1", "val2", "val3", "val3"]
+  ]
+  =>
+  %{
+  "key1" => #MapSet<["val1", "val2"]>,
+  "key2" => #MapSet<["val1", "val2", "val3"]>
+  }
+  """
+  @spec makeMatrix(list, (any -> any)) :: map
+  def makeMatrix(list, fun) do
+    list
+    |> Enum.reduce(
+      Map.new(),
+      fn x, acc ->
+        case fun.(x) do
+          # can we work with this value?
+          [key | values] ->
+            Map.update(acc, key, MapSet.new(values), fn map_set ->
+              Enum.map(values, fn val -> MapSet.put(map_set, val)end)
+            end)
+          # cannot work with this value, go on
+          true -> acc
+        end
+      end
+    )
+  end
 end
 
 # MyReduce.map([1,2,3,4,5])
@@ -68,5 +97,11 @@ is_even = fn x -> rem(x, 2) == 0 end
 # |> IO.inspect # [2, 4, 6, 8]
 
 fun = fn x -> x end
-MyReduce.list_to_map([['key1', 'val1', 'val2']], fun)
+# MyReduce.list_to_map([['key1', 'val1', 'val2'], ['key2', 'val1', 'val2']], fun)
 # |> IO.inspect # %{'key1' => ['val1', 'val2']}
+
+MyReduce.makeMatrix([
+  ["key1", "val1", "val2", "val1"],
+  ["key2", "val1", "val2", "val3", "val3"]
+  ], fun)
+# |> IO.inspect #
