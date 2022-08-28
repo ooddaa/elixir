@@ -6,15 +6,26 @@ defmodule Tuples do
   import IO
 
   def main do
+    # CREATE
     fruits = { "apple", "banana", "coconut", :true, 1 }
-    puts elem(fruits, 1) # banana
-    puts elem(fruits, 3) # true
 
+
+    # ACCESS
+    elem(fruits, 1)
+    # |> IO.inspect # banana
+
+    elem(fruits, 3)
+    # |> IO.inspect # true
+
+
+    # ADD
     fruits2 = put_elem(fruits, 0, "lol")
-    puts elem(fruits2, 0) # lol
+    elem(fruits2, 0)
+    # |> IO.inspect # lol
 
     fruits3 = { { "hehe" } }
-    puts elem(elem(fruits3, 0), 0) # hehe
+    elem(elem(fruits3, 0), 0)
+    # |> IO.inspect # hehe
   end
 
 end

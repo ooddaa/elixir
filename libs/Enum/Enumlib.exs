@@ -59,44 +59,7 @@ defmodule Enumlib do
 
   end
 
-  def reduce do
-    # https://hexdocs.pm/elixir/1.13.4/Enum.html#reduce/3
-    list = [
-      ["1791", "3644", "true", "2019-08-13 09:13:39"],
-      ["1791", "7075", "true", "2019-08-13 09:13:39"],
-      ["5121", "7075", "true", "2019-08-22 07:53:40"],
-      ["5121", "7032", "true", "2019-08-22 07:53:40"],
-      ["5121", "9981", "true", "2019-08-22 07:53:40"],
-      ["6840", "7032", "true", "2019-08-28 17:43:15"],
-      ["6840", "9981", "true", "2019-08-28 18:32:47"],
-      ["6291", "7317", "true", "2019-08-25 20:14:18"],
-      ["45", "11237", "true", "2019-09-24 15:03:47"],
-      ["2700", "6122", "true", "2019-08-14 15:21:10"],
-      ["7704", "4566", "true", "2019-09-01 20:52:34"],
-    ]
 
-    Enum.reduce(list, Map.new(),
-      fn (element, acc) ->
-        [job_id, user_id, direction, time] = element
-        # acc
-        # |> IO.inspect(label: 'acc')
-        case Map.has_key?(acc, user_id) do
-          false -> Map.put(acc, user_id, MapSet.new())
-          true -> acc
-        end
-        |> IO.inspect(label: 'case')
-        # Map.get(acc, user_id) |> IO.inspect
-        |> Map.get(user_id)
-        # |> IO.inspect(label: 'Map.get(user_id)')
-        |> MapSet.put(job_id)
-        acc
-        # |> IO.inspect(label: 'return')
-      end
-    )
-    |> IO.inspect(label: 'rv')
-
-  end
 end
 
 # Enumlib.main()
-Enumlib.reduce()
