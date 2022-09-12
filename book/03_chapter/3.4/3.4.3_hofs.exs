@@ -1,13 +1,13 @@
-Enum.each([1,2,3], fn x -> x * 2 end)
+Enum.each([1..3], fn x -> x * 2 end)
 # |> IO.inspect() # :ok
 
-Enum.map([1,2,3], fn x -> x * 2 end)
+Enum.map([1..3], fn x -> x * 2 end)
 # |> IO.inspect() # [2, 4, 6]
 
-Enum.map([1,2,3], &(&1 * 2))
+Enum.map([1..3], &(&1 * 2))
 # |> IO.inspect() # [2, 4, 6]
 
-Enum.filter([1,2,3], &(rem(&1, 2) == 0))
+Enum.filter([1..3], &(rem(&1, 2) == 0))
 # |> IO.inspect() # [2]
 
 defmodule :hofs do
