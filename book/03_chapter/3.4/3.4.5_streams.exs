@@ -18,19 +18,26 @@
 # dbg()
 
 # WITH INDEX
-["Alice", "Bobby", "Chebu"]
-|> Stream.with_index
-|> Enum.map(&(IO.inspect("#{elem(&1,1) + 1}. #{elem(&1,0)}")))
+# ["Alice", "Bobby", "Chebu"]
+# |> Stream.with_index
+# |> Enum.map(&(IO.inspect("#{elem(&1,1) + 1}. #{elem(&1,0)}")))
 # |> Enum.map(fn { employee, index } ->
 #     IO.inspect("#{index + 1}. #{employee}")
 # end)
 
 
 # MAP
-[-1, 9, "lol", 25, 99]
-|> Stream.filter(&(is_number(&1) and &1 > 0))
-|> Stream.map(&({ &1, :math.sqrt(&1) }))
-|> Stream.with_index
-|> Enum.each(fn { { input, sqrt }, index } ->
-  IO.puts("#{index + 1}. sqrt(#{input}) = #{sqrt}")
-end)
+# [-1, 9, "lol", 25, 99]
+# |> Stream.filter(&(is_number(&1) and &1 > 0))
+# |> Stream.map(&({ &1, :math.sqrt(&1) }))
+# |> Stream.with_index
+# |> Enum.each(fn { { input, sqrt }, index } ->
+#   IO.puts("#{index + 1}. sqrt(#{input}) = #{sqrt}")
+# end)
+
+
+# FILE
+# File.stream!("./3.4.3_hofs.exs")
+# |> Stream.map(&(String.replace(&1, "\n", "")))
+# |> Enum.filter(&(String.length(&1) > 40))
+# |> IO.inspect
