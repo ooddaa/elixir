@@ -8,17 +8,17 @@ defmodule :todo do
   def new(), do: %{}
 
   # TODO how do I check key is a Date?
-  @spec add_entry(map, date, value) :: map
+  @spec add_entry(map, Date, String) :: map
   def add_entry(todo_map, date, title) do
-    Map.update(todo_map, date, [title], fn titles -> [title|titles] end)
+    Map.update(todo_map, date, [title], &[title|&1])
   end
 
-  @spec get_entry(map, date) :: value
+  @spec get_entry(map, Date) :: String
   def get_entry(todo_map, date) do
     Map.get(todo_map, date, [])
   end
 
-  @spec entries(map) :: [{ date, value }]
+  @spec entries(map) :: [{ Date, String }]
   def entries(todo_map) do
     Map.to_list(todo_map)
   end
