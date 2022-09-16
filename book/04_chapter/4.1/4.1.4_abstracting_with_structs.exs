@@ -64,3 +64,8 @@ end
 # one_half = %Fraction{ a: 1, b: 2 }
 # one_half.value()
 # |> IO.inspect()
+
+# struct(Fraction, a: 1, b: 2)
+# |> Fraction.add(struct(Fraction, a: 1, b: 2))
+# |> Fraction.value()
+# |> IO.inspect()
