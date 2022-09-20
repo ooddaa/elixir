@@ -66,6 +66,13 @@ defmodule TodoList do
   end
 
   def entries(todo_list), do: Map.to_list(todo_list)
+
+  def delete_entry(todo_list, id) do
+    { _, new_entries } = todo_list.entries
+    |> pop_in([id])
+
+    %TodoList{ entries: new_entries, auto_id: todo_list.auto_id }
+  end
 end
 
 # TodoList.new()
@@ -87,5 +94,12 @@ end
 # TodoList.new()
 # |> TodoList.add_entry(%{date: ~D[2022-09-15], title: "Slava's birthday"})
 # |> TodoList.update_entry2(1, &Map.put(&1, :title, "ADCC finals"))
+# |> TodoList.entries()
+# |> IO.inspect()
+
+# TodoList.new()
+# |> TodoList.add_entry(%{date: ~D[2022-09-15], title: "Slava's birthday"})
+# |> TodoList.add_entry(%{date: ~D[2022-09-15], title: "smth else"})
+# |> TodoList.delete_entry(1)
 # |> TodoList.entries()
 # |> IO.inspect()
