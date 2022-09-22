@@ -38,6 +38,7 @@ entries = [
   %{date: ~D[2022-09-17], title: "smth else"}
 ]
 
-TodoList.new(entries)
+entries
+|> TodoList.new()
 |> TodoList.entries()
 |> IO.inspect()

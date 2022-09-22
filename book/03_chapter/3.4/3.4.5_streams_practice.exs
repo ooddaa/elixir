@@ -2,7 +2,7 @@ defmodule :practice do
   def filtered_lines!(path) do
     path
     |> File.stream!()
-    |> Stream.filter(&String.replace(&1, "\n", ""))
+    |> Stream.filter(&String.replace(&1, "\n", "")) # ?? map?!
   end
   @doc """
   A lines_lengths!/1 that takes a file path and returns

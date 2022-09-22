@@ -12,3 +12,9 @@ defmodule :receiver do
       end
     end
 end
+
+
+# c("5.2.2_message_passing.exs") # [:receiver]
+# pid = spawn(&:receiver.callback/0) # #PID<0.116.0>
+# Process.exit(pid, "enough is enough") # true
+# Process.alive?(pid) # false
