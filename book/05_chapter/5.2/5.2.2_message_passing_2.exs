@@ -1,16 +1,10 @@
 defmodule :messenger do
   def send_message(message) do
     receiver_pid = spawn(&callback/0)
-    # receiver_pid = spawn(fn -> &callback/0 end)
-    sender_pid = self()
-    IO.inspect(sender_pid, label: 'sender')
-    IO.inspect(receiver_pid, label: 'recevier')
-    # send(receiver_pid, { :request, sender_pid })
-    send(receiver_pid, { :request, sender_pid, message })
+    send(receiver_pid, { :request, self(), message })
   end
 
   def run_query(query) do
-    # Process.sleep(2000)
     "#{query} result"
   end
 
@@ -21,16 +15,12 @@ defmodule :messenger do
 
   def callback do
     receive do
-      # { :request, sender_pid, message } ->
       { :request, sender_pid, message } ->
-        IO.inspect(sender_pid, label: 'received from')
-        # send(sender_pid, {:response, "reply to message: #{message}"})
         send(sender_pid, {:response, "reply to: #{inspect sender_pid}, message: #{message}"})
-        callback()
       true ->
-        IO.puts("error")
-        callback()
+        {:error, "something wrong"}
     end
+    callback()
   end
 
   def read_mailbox do

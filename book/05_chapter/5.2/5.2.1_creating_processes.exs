@@ -27,3 +27,5 @@ async_query =
   end
 
 Enum.map(1..5, &(async_query.("query #{&1}")))
+
+# Process.info(pid)
