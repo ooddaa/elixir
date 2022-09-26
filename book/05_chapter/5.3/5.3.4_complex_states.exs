@@ -8,32 +8,24 @@ defmodule TodoServer do
   def loop(todo_list) do
     new_todo_list = receive do
       message -> process_message(todo_list, message)
+      invalid_message ->
+        IO.puts("invalid_message: #{invalid_message}")
+        todo_list
     end
     loop(new_todo_list)
   end
 
+
+  # INTERFACE FUNCTIONS
   def add_entry(server_pid, new_entry) do
-    send(server_pid, {:add, new_entry})
+    send(server_pid, {:add_entry, self(), new_entry})
+
+    receive do
+      {:added_entry, updated_todo_list} -> updated_todo_list
+    after
+      2000 -> {:error, :timeout}
+    end
   end
-
-  defp process_message(todo_list, {:add, new_entry}) do
-    todo_list
-    |> TodoList.add_entry(new_entry)
-  end
-
-
-  # def entries1(server_pid) do
-  #   send(server_pid, {:entries})
-  # end
-
-  # defp process_message1(todo_list, {:entries}) do
-  #   todo_list
-  #   |> TodoList.entries()
-  #   |> IO.inspect()
-
-  #   todo_list
-  # end
-
 
   def entries(server_pid) do
     send(server_pid, {:entries, self()})
@@ -45,13 +37,9 @@ defmodule TodoServer do
     end
   end
 
-  defp process_message(todo_list, {:entries, caller}) do
-    send(caller, {:todo_entries, TodoList.entries(todo_list)})
-    todo_list
-  end
-
   def update_entry(server_pid, id, updater) do
     send(server_pid, {:update_entry, self(), id, updater})
+
     receive do
       {:updated_entry, updated_todo_list} -> updated_todo_list
     after
@@ -59,19 +47,32 @@ defmodule TodoServer do
     end
   end
 
-  defp process_message(todo_list, {:update_entry, caller, id, updater}) do
-    updated_todo_list = TodoList.update_entry(todo_list, id, updater)
-    send(caller, {:updated_entry, updated_todo_list})
-    updated_todo_list
-  end
-
   def delete_entry(server_pid, id) do
     send(server_pid, {:delete_entry, self(), id})
+
     receive do
       {:entry_deleted, updated_todo_list} -> updated_todo_list
     after
       2000 -> {:error, :timeout}
     end
+  end
+
+
+  defp process_message(todo_list, {:add_entry, caller, new_entry}) do
+    updated_todo_list = TodoList.add_entry(todo_list, new_entry)
+    send(caller, {:added_entry, updated_todo_list})
+    updated_todo_list
+  end
+
+  defp process_message(todo_list, {:entries, caller}) do
+    send(caller, {:todo_entries, TodoList.entries(todo_list)})
+    todo_list
+  end
+
+  defp process_message(todo_list, {:update_entry, caller, id, updater}) do
+    updated_todo_list = TodoList.update_entry(todo_list, id, updater)
+    send(caller, {:updated_entry, updated_todo_list})
+    updated_todo_list
   end
 
   defp process_message(todo_list, {:delete_entry, caller, id}) do
