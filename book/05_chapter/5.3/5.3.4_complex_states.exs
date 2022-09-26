@@ -50,6 +50,22 @@ defmodule TodoServer do
     todo_list
   end
 
+  def update_entry(server_pid, id, updater) do
+    send(server_pid, {:update_entry, self(), id, updater})
+    receive do
+      {:updated_entry, updated_todo_list} -> updated_todo_list
+    after
+      2000 -> {:error, :timeout}
+    end
+  end
+
+  defp process_message(todo_list, {:update_entry, caller, id, updater}) do
+    updated_todo_list = TodoList.update_entry(todo_list, id, updater)
+    send(caller, {:updated_entry, updated_todo_list})
+    updated_todo_list
+  end
+
+
 end
 
 defmodule TodoList do
@@ -88,4 +104,13 @@ defmodule TodoList do
   end
 
   def entries(todo_list), do: Map.to_list(todo_list)
+
+  def update_entry(todo_list, id, updater) do
+    case Map.fetch(todo_list.entries, id) do
+      :error -> todo_list
+      { :ok, entry } ->
+        new_entries = Map.put(todo_list.entries, id, updater.(entry))
+        %TodoList{ todo_list | entries: new_entries }
+    end
+  end
 end
