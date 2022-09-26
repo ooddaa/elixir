@@ -65,7 +65,20 @@ defmodule TodoServer do
     updated_todo_list
   end
 
+  def delete_entry(server_pid, id) do
+    send(server_pid, {:delete_entry, self(), id})
+    receive do
+      {:entry_deleted, updated_todo_list} -> updated_todo_list
+    after
+      2000 -> {:error, :timeout}
+    end
+  end
 
+  defp process_message(todo_list, {:delete_entry, caller, id}) do
+    updated_todo_list = TodoList.delete_entry(todo_list, id)
+    send(caller, {:entry_deleted, updated_todo_list})
+    updated_todo_list
+  end
 end
 
 defmodule TodoList do
@@ -112,5 +125,12 @@ defmodule TodoList do
         new_entries = Map.put(todo_list.entries, id, updater.(entry))
         %TodoList{ todo_list | entries: new_entries }
     end
+  end
+
+  def delete_entry(todo_list, id) do
+    { _, new_entries } = todo_list.entries
+    |> pop_in([id])
+
+    %TodoList{ entries: new_entries, auto_id: todo_list.auto_id }
   end
 end
