@@ -60,7 +60,7 @@ defmodule KeyValueStore do
     ServerProcess.cast(:server_pid, {:delete, key})
   end
 
-
+  # SYNC CALL HANDLERS
   def handle_call({:put, key, value}, current_store) do
     {:ok, Map.put(current_store, key, value)}
   end
@@ -73,6 +73,7 @@ defmodule KeyValueStore do
     {:ok, Map.delete(current_store, key)}
   end
 
+  # ASYNC CAST HANDLERS
   def handle_cast({:put, key, value}, current_store) do
     Map.put(current_store, key, value)
   end
