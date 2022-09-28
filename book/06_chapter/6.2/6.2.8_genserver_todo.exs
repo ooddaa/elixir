@@ -10,8 +10,11 @@ defmodule TodoServer do
     GenServer.cast(todo_server, {:add_entry, new_entry})
   end
 
-  def entries(todo_server, date) do
-    GenServer.call(todo_server, {:entries, date})
+  @doc """
+  Shorten timeout
+  """
+  def entries(todo_server, date, timeout \\ 2500) do
+    GenServer.call(todo_server, {:entries, date}, timeout)
   end
 
   # SERVER
@@ -89,7 +92,7 @@ defmodule TodoServer.Test do
 
   test "test", %{pid: pid} do
     TodoServer.add_entry(pid, %{date: ~D[2022-09-15], title: "go to park"})
-    assert TodoServer.entries(pid, ~D[2022-09-15]) == [%{date: ~D[2022-09-15], id: 1, title: "go to park"}]
+    assert TodoServer.entries(pid, ~D[2022-09-15], 1000) == [%{date: ~D[2022-09-15], id: 1, title: "go to park"}]
   end
 
 end
