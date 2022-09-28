@@ -27,6 +27,7 @@ defmodule KVS do
   @impl true
   def handle_info(:headsup, state) do
     IO.puts "everything is great 👍"
+    :timer.send_after(:timer.seconds(3), :headsup)
     {:noreply, state}
   end
 
