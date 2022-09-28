@@ -1,6 +1,7 @@
 defmodule KVS do
   use GenServer
 
+  @impl true
   def init(_init_arg), do: {:ok, %{}}
 
   @impl true
@@ -16,7 +17,7 @@ defmodule KVS do
   # INTERFACE
   def start do
     {:ok, pid} = GenServer.start(__MODULE__, nil)
-    IO.puts (inspect pid)
+    # IO.puts (inspect pid)
     case Process.whereis(:server) do
       nil -> Process.register(pid, :server)
       old_pid -> if is_pid(old_pid) do
@@ -24,11 +25,34 @@ defmodule KVS do
         Process.register(pid, :server)
       end
     end
+    {:ok, pid}
   end
   def put(key, value) do
     GenServer.cast(:server, {:put, key, value})
   end
   def get(key) do
     GenServer.call(:server, {:get, key})
+  end
+end
+
+
+ExUnit.start()
+
+defmodule KVS.Test do
+  use ExUnit.Case, async: true
+
+  setup do
+    KVS.start
+    %{}
+  end
+
+  test "puts" do
+    assert KVS.get(:a) == nil
+    assert KVS.put(:a, 1) == :ok
+  end
+  test "gets" do
+    assert KVS.get(:a) == nil
+    assert KVS.put(:a, 1) == :ok
+    assert KVS.get(:a) == 1
   end
 end

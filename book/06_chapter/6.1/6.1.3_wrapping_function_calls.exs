@@ -28,13 +28,12 @@ defmodule KeyValueStore do
   def start do
     pid = ServerProcess.start(KeyValueStore)
 
-    case Process.whereis(:server_pid) do
-      nil -> Process.register(pid, :server_pid)
-      pid -> if is_pid(pid) do
-        Process.unregister(:server_pid)
-        Process.register(pid, :server_pid)
+    case Process.whereis(:server) do
+      nil -> Process.register(pid, :server)
+      old_pid -> if is_pid(old_pid) do
+        Process.unregister(:server)
+        Process.register(pid, :server)
       end
-
     end
   end
 
