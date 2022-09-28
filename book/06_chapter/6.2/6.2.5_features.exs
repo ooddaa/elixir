@@ -1,6 +1,7 @@
 defmodule KVS do
   use GenServer
 
+  # EXECUTED IN SERVER PROCESS
   @impl true
   def init(_init_arg) do
     :timer.send_interval(2_000, :cleanup)
@@ -31,7 +32,8 @@ defmodule KVS do
     {:noreply, state}
   end
 
-  # INTERFACE
+  # CLIENT INTERFACE
+  # EXECUTED IN CLIENT PROCESS
   def start do
     {:ok, pid} = GenServer.start(__MODULE__, nil, name: __MODULE__)
     IO.puts (inspect pid)
