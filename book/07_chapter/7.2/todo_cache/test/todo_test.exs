@@ -1,14 +1,21 @@
-defmodule Todo.Server.Test do
+defmodule Todo.Cache.Test do
   use ExUnit.Case, async: true
 
   setup do
-    {:ok, pid} = Todo.Server.start
+    {:ok, pid} = Todo.Cache.start
     %{pid: pid}
   end
 
   test "test", %{pid: pid} do
-    Todo.Server.add_entry(pid, %{date: ~D[2022-09-15], title: "go to park"})
-    assert Todo.Server.entries(pid, ~D[2022-09-15], 1000) == [%{date: ~D[2022-09-15], id: 1, title: "go to park"}]
+    first_server = Todo.Cache.server_process(pid, "a")
+    second_server = Todo.Cache.server_process(pid, "b")
+
+    assert first_server != second_server
+
+    Todo.Server.add_entry(first_server, %{date: ~D[2022-09-30], title: "Amari"})
+
+    assert [%{date: ~D[2022-09-30], title: "Amari"}] = Todo.Server.entries(first_server, ~D[2022-09-30])
+    assert [] = Todo.Server.entries(second_server, ~D[2022-09-30])
   end
 
 end
