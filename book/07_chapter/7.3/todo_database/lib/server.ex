@@ -20,14 +20,8 @@ defmodule Todo.Server do
   # SERVER
   @impl true
   def init(todo_list_name) do
-    Todo.Database.start()
-    {
-      :ok,
-      {
-        todo_list_name,
-        Todo.Database.get(todo_list_name) || Todo.List.new()
-      }
-    }
+    send(self(), {:real_init, todo_list_name})
+    {:ok, nil}
   end
 
   @impl true
@@ -41,6 +35,23 @@ defmodule Todo.Server do
   def handle_call({:entries, date}, _from, { todo_list_name, todo_list }) do
 
     {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list }}
+  end
+
+  @doc """
+  A trick to initialize state in a separate process, as
+  state initialization may take a while (if db is non responsive?).
+  So that calls to Todo.Cache aren't blocked by Todo.Server.init()
+  """
+  @impl true
+  def handle_info({:real_init, todo_list_name}, nil) do
+    Todo.Database.start()
+    {
+      :noreply,
+      {
+        todo_list_name,
+        Todo.Database.get(todo_list_name) || Todo.List.new()
+      }
+    }
   end
 end
 
