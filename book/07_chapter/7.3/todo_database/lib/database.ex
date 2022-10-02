@@ -8,58 +8,34 @@ defmodule Todo.Database do
   end
 
   def store(key, data) do
-    GenServer.cast(__MODULE__, {:store, key, data})
+    GenServer.cast(choose_worker(key), {:store, key, data})
   end
 
   def get(key) do
-    GenServer.call(__MODULE__, {:get, key})
+    GenServer.call(choose_worker(key), {:get, key})
+  end
+
+  def choose_worker(key) do
+    GenServer.call(__MODULE__, {:choose_worker, key})
   end
 
   # SERVER
   @impl true
   def init(_) do
     File.mkdir_p!(@db_folder)
-    {:ok, nil}
+    # worker pool
+    {
+      :ok,
+      %{
+        0 => Todo.Database.Worker.start(@db_folder),
+        1 => Todo.Database.Worker.start(@db_folder),
+        2 => Todo.Database.Worker.start(@db_folder),
+      }
+    }
   end
 
   @impl true
-  def handle_cast({:store, key, data}, state) do
-    # run a separate worker
-    spawn(fn ->
-      key
-        |> build_path()
-        |> File.write!(:erlang.term_to_binary(data))
-    end)
-
-    {:noreply, state}
-  end
-
-  @impl true
-  def handle_call({:get, key}, caller, state) do
-    # run a separate worker
-    spawn(fn ->
-      data = case File.read(build_path(key)) do
-        {:ok, contents} -> :erlang.binary_to_term(contents)
-        _ -> nil
-      end
-
-      GenServer.reply(caller, data)
-    end)
-
-    {:noreply, state}
-  end
-
-  def build_path(key) do
-    # with absolute path
-    # {:ok, cwd} = File.cwd()
-    # cwd
-    #   |> Path.split()
-    #   |> Enum.reverse()
-    #   |> then(&(["data/#{key}"|&1]))
-    #   |> Enum.reverse()
-    #   |> Path.join()
-
-    # with relative path
-    Path.join(@db_folder, to_string(key))
+  def handle_call({:choose_worker, key}, _caller, worker_pool) do
+    {:reply, Map.get(worker_pool, :erlang.phash2(key, 3)), worker_pool }
   end
 end

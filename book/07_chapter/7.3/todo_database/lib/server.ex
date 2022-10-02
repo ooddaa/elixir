@@ -33,7 +33,6 @@ defmodule Todo.Server do
 
   @impl true
   def handle_call({:entries, date}, _from, { todo_list_name, todo_list }) do
-
     {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list }}
   end
 
