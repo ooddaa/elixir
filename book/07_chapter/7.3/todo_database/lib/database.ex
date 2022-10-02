@@ -1,25 +1,28 @@
 defmodule Todo.Database do
   use GenServer
   @db_folder "./data"
+
   # CLIENT
   def start do
-    GenServer.start(__MODULE__, nil)
+    GenServer.start(__MODULE__, nil, name: __MODULE__)
   end
 
-  def store(pid, key, data) do
-    GenServer.cast(pid, {:store, key, data})
+  def store(key, data) do
+    GenServer.cast(__MODULE__, {:store, key, data})
   end
 
-  def get(pid, key) do
-    GenServer.call(pid, {:get, key})
+  def get(key) do
+    GenServer.call(__MODULE__, {:get, key})
   end
 
   # SERVER
+  @impl true
   def init(_) do
     File.mkdir_p!(@db_folder)
     {:ok, nil}
   end
 
+  @impl true
   def handle_cast({:store, key, data}, state) do
     key
       |> build_path()
@@ -28,6 +31,7 @@ defmodule Todo.Database do
     {:noreply, state}
   end
 
+  @impl true
   def handle_call({:get, key}, _from, state) do
     data = case File.read(build_path(key)) do
       {:ok, contents} -> :erlang.binary_to_term(contents)

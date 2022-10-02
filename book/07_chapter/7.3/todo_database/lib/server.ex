@@ -2,8 +2,8 @@ defmodule Todo.Server do
   use GenServer
 
   # CLIENT
-  def start do
-    GenServer.start(__MODULE__, nil)
+  def start(todo_list_name) do
+    GenServer.start(__MODULE__, todo_list_name)
   end
 
   def add_entry(todo_server, new_entry) do
@@ -19,17 +19,29 @@ defmodule Todo.Server do
 
   # SERVER
   @impl true
-  def init(_) do
-    {:ok, Todo.List.new()}
+  def init(todo_list_name) do
+    Todo.Database.start()
+    {
+      :ok,
+      {
+        todo_list_name,
+        Todo.Database.get(todo_list_name) || Todo.List.new()
+      }
+    }
   end
 
   @impl true
-  def handle_cast({:add_entry, new_entry}, todo_list) do
-    {:noreply, Todo.List.add_entry(todo_list, new_entry)}
+  def handle_cast({:add_entry, new_entry}, { todo_list_name, todo_list }) do
+    new_todolist = Todo.List.add_entry(todo_list, new_entry)
+    Todo.Database.store(todo_list_name, new_todolist)
+    {:noreply, { todo_list_name, new_todolist }}
   end
 
   @impl true
-  def handle_call({:entries, date}, _from, todo_list) do
-    {:reply, Todo.List.entries(todo_list, date), todo_list}
+  def handle_call({:entries, date}, _from, { todo_list_name, todo_list }) do
+
+    {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list }}
   end
 end
+
+# %{date: ~D[2022-09-15], title: "go to park"}
