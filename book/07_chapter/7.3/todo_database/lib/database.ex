@@ -24,21 +24,29 @@ defmodule Todo.Database do
 
   @impl true
   def handle_cast({:store, key, data}, state) do
-    key
-      |> build_path()
-      |> File.write!(:erlang.term_to_binary(data))
+    # run a separate worker
+    spawn(fn ->
+      key
+        |> build_path()
+        |> File.write!(:erlang.term_to_binary(data))
+    end)
 
     {:noreply, state}
   end
 
   @impl true
-  def handle_call({:get, key}, _from, state) do
-    data = case File.read(build_path(key)) do
-      {:ok, contents} -> :erlang.binary_to_term(contents)
-      _ -> nil
-    end
+  def handle_call({:get, key}, caller, state) do
+    # run a separate worker
+    spawn(fn ->
+      data = case File.read(build_path(key)) do
+        {:ok, contents} -> :erlang.binary_to_term(contents)
+        _ -> nil
+      end
 
-    {:reply, data, state}
+      GenServer.reply(caller, data)
+    end)
+
+    {:noreply, state}
   end
 
   def build_path(key) do
