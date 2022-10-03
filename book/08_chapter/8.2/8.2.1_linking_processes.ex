@@ -1,26 +1,34 @@
-spawn(fn  ->
-  spawn(fn ->
-    Process.sleep(1000)
-    # gonna print! as perfectly isolated
-    IO.puts("1. it's nice to take a nap 😴")
-  end)
-  raise("error 🙀")
-  IO.puts("not gonna print")
-end)
+# NON LINKED PROCESSES ARE ISOLATED
+# spawn(fn  ->
+#   spawn(fn ->
+#     Process.sleep(1000)
+#     # gonna print! as perfectly isolated
+#     IO.puts("1. it's nice to take a nap 😴")
+#   end)
+#   raise("error 🙀")
+#   IO.puts("not gonna print")
+# end)
 
-spawn(fn  ->
-  spawn_link(fn ->
-    Process.sleep(1000)
-    # gets killed by it's parent ((
-    IO.puts("2. it's nice to take a nap 😴 - not gonna print")
-  end)
-  raise("error 🙀")
-  IO.puts("not gonna print")
+
+# LINKED PROCESSES DIE TOGETHER
+# spawn(fn  ->
+#   spawn_link(fn ->
+#     Process.sleep(1000)
+#     # gets killed by it's parent ((
+#     IO.puts("2. it's nice to take a nap 😴 - not gonna print")
+#   end)
+#   raise("error 🙀")
+#   IO.puts("not gonna print")
+# end)
+
+spawn(fn ->
+  spawn_link(fn -> raise("going down") end)
+  Process.sleep(500)
+  IO.puts("not gonna print - killed by the child")
 end)
 
 
 # TRAP EXIT
-
 spawn(fn ->
   # https://hexdocs.pm/elixir/1.13/Process.html#flag/2
   # https://www.erlang.org/doc/man/erlang.html#process_flag-2
@@ -44,5 +52,4 @@ spawn(fn ->
       #       ]}
       #     ]}}
   end
-
 end)
