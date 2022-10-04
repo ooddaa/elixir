@@ -10,20 +10,20 @@ defmodule Todo.Cache do
   end
 
   def start_link(_) do
-    IO.puts("Starting linked todo cache")
+    IO.puts("Starting supervised todo cache")
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   # # overwrite generic child specification
-  def start_link_lol(_) do
-    IO.puts("Starting lollolo todo cache")
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
-  end
+  # def start_link_lol(_) do
+  #   IO.puts("Starting lollolo todo cache")
+  #   GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  # end
 
-  # overwrite generic child specification
-  def child_spec(arg) do
-    %{id: __MODULE__, start: {__MODULE__, :start_link_lol, [arg]}}
-  end
+  # # overwrite generic child specification
+  # def child_spec(arg) do
+  #   %{id: __MODULE__, start: {__MODULE__, :start_link_lol, [arg]}}
+  # end
 
   def server_process(todo_list_name) do
     GenServer.call(__MODULE__, {:server_process, todo_list_name})
