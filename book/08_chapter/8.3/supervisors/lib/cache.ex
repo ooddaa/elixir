@@ -5,7 +5,7 @@ defmodule Todo.Cache do
 
   # CLIENT
   def start do
-    IO.puts("Starting todo cache")
+    IO.puts("Starting unsupervised todo cache")
     GenServer.start(__MODULE__, nil, name: __MODULE__)
   end
 
@@ -28,6 +28,7 @@ defmodule Todo.Cache do
   def server_process(todo_list_name) do
     GenServer.call(__MODULE__, {:server_process, todo_list_name})
   end
+
   def server_process(pid, todo_list_name) do
     GenServer.call(pid, {:server_process, todo_list_name})
   end
@@ -51,7 +52,7 @@ defmodule Todo.Cache do
         {:reply, todo_server, todo_servers}
 
       :error ->
-        {:ok, new_server} = Todo.Server.start(todo_list_name)
+        {:ok, new_server} = Todo.Server.start_link(todo_list_name)
 
         {
           :reply,

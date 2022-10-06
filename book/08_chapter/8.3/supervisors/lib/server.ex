@@ -2,8 +2,8 @@ defmodule Todo.Server do
   use GenServer
 
   # CLIENT
-  def start(todo_list_name) do
-    GenServer.start(__MODULE__, todo_list_name)
+  def start_link(todo_list_name) do
+    GenServer.start_link(__MODULE__, todo_list_name)
   end
 
   def add_entry(todo_server, new_entry) do
@@ -43,7 +43,7 @@ defmodule Todo.Server do
   """
   @impl true
   def handle_info({:real_init, todo_list_name}, nil) do
-    Todo.Database.start()
+    Todo.Database.start_link()
     {
       :noreply,
       {

@@ -3,8 +3,8 @@ defmodule Todo.Database do
   @db_folder "./data"
 
   # CLIENT
-  def start do
-    GenServer.start(__MODULE__, nil, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def store(key, data) do
@@ -27,9 +27,9 @@ defmodule Todo.Database do
     {
       :ok,
       %{
-        0 => Todo.Database.Worker.start(@db_folder),
-        1 => Todo.Database.Worker.start(@db_folder),
-        2 => Todo.Database.Worker.start(@db_folder),
+        0 => Todo.Database.Worker.start_link(@db_folder),
+        1 => Todo.Database.Worker.start_link(@db_folder),
+        2 => Todo.Database.Worker.start_link(@db_folder),
       }
     }
   end
