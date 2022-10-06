@@ -4,8 +4,25 @@ defmodule Parser do
   end
 
   defp parse(input) do
-    parser = char(?b)
+    parser = choice([digit(), letter()])
     parser.(input)
+  end
+
+  defp choice(parsers) do
+    fn input ->
+      case parsers do
+        [] ->
+          {:error, "no parser succeeded"}
+
+        [parser | other_parsers] ->
+          # case parser.(input) do
+          #   { :ok, term, rest } -> { :ok, term, rest }
+          #   { :error, reason } -> choice(other_parsers).(input)
+          # end
+          with {:error, reason} <- parser.(input),
+              do: choice(other_parsers).(input)
+      end
+    end
   end
 
   defp digit, do: satisfy(char(), fn term -> term in ?0..?9 end)
