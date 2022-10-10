@@ -11,7 +11,7 @@ defmodule Tree do
 
   defimpl Functor do
     def fmap(%Tree{ value: value, children: [] }, f),
-      do: %Tree{ value: f.(value), children: []}
+      do: %Tree{ value: f.(value), children: [] }
 
     def fmap(%Tree{ value: value, children: children }, f) do
       %Tree{
