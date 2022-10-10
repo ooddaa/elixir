@@ -21,6 +21,11 @@ defimpl Functor, for: Map do
   end
 end
 
+defimpl Functor, for: Tuple do
+  def fmap({:ok, value}, f), do: {:ok, f.(value)}
+  def fmap({:error, reason}, _f), do: {:error, reason}
+end
+
 # Functor.fmap([1000,2000,3000], fn x -> x + 10 end)
 # |> IO.inspect()
 
