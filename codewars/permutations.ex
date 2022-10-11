@@ -80,10 +80,33 @@ defmodule Permutations do
   end
 end
 
-Permutations.worker([5,  13,  3,  7,  11, 14, 6,  9,  12, 2, 15,  4,  8,  1,  10])
-# Permutations.worker([4, 3, 2, 1])
-# Permutations.worker([1, 2,  3,  4])
-# Permutations.worker([])
-|> IO.inspect(label: 'semi-final')
-|> Permutations.sum()
-|> IO.inspect(label: 'final')
+ExUnit.start()
+
+defmodule Permutations.Test do
+  use ExUnit.Case, async: true
+
+  test "first" do
+    result =
+      [5,  13,  3,  7,  11, 14, 6,  9,  12, 2, 15,  4,  8,  1,  10]
+      |> Permutations.worker()
+      |> Permutations.sum()
+    assert result == 55
+  end
+
+  test "second" do
+    result =
+      [1, 2,  3,  4]
+      |> Permutations.worker()
+      |> Permutations.sum()
+    assert result == 0
+  end
+
+  test "empty" do
+    result =
+      []
+      |> Permutations.worker()
+      |> Permutations.sum()
+    assert result == 0
+  end
+
+end
