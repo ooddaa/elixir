@@ -19,5 +19,4 @@ defmodule EchoServer do
     IO.puts("got: #{inspect request}")
     {:reply, request, state}
   end
-
 end

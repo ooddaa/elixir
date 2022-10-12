@@ -3,6 +3,7 @@ defmodule Todo.Server do
 
   # CLIENT
   def start_link(todo_list_name) do
+    IO.puts("Starting to-do server for #{todo_list_name}.")
     GenServer.start_link(__MODULE__, todo_list_name)
   end
 
@@ -18,38 +19,21 @@ defmodule Todo.Server do
   end
 
   # SERVER
-  @impl true
+  @impl GenServer
   def init(todo_list_name) do
-    send(self(), {:real_init, todo_list_name})
-    {:ok, nil}
+    {:ok, {todo_list_name, Todo.Database.get(todo_list_name) || Todo.List.new()}}
   end
 
-  @impl true
+  @impl GenServer
   def handle_cast({:add_entry, new_entry}, { todo_list_name, todo_list }) do
     new_todolist = Todo.List.add_entry(todo_list, new_entry)
     Todo.Database.store(todo_list_name, new_todolist)
     {:noreply, { todo_list_name, new_todolist }}
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:entries, date}, _from, { todo_list_name, todo_list }) do
     {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list }}
-  end
-
-  @doc """
-  A trick to initialize state in a separate process, as
-  state initialization may take a while (if db is non responsive?).
-  So that calls to Todo.Cache aren't blocked by Todo.Server.init()
-  """
-  @impl true
-  def handle_info({:real_init, todo_list_name}, nil) do
-    {
-      :noreply,
-      {
-        todo_list_name,
-        Todo.Database.get(todo_list_name) || Todo.List.new()
-      }
-    }
   end
 end
 
