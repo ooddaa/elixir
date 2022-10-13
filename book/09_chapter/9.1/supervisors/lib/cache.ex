@@ -4,13 +4,21 @@ defmodule Todo.Cache do
   use GenServer
 
   # CLIENT
-  def start_link(_) do
+  def start_link do
     IO.puts("Starting supervised todo cache")
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def server_process(todo_list_name) do
     GenServer.call(__MODULE__, {:server_process, todo_list_name})
+  end
+
+  def child_spec(_) do
+    %{
+      id: __MODULE__,
+      start: { __MODULE__, :start_link, []},
+      type: :worker
+    }
   end
 
   # SERVER
@@ -41,6 +49,7 @@ defmodule Todo.Cache do
     end
   end
 
+  @impl GenServer
   def handle_cast({:get_pid, name}, state) do
     {:noreply, Map.get(state, name), state}
   end
