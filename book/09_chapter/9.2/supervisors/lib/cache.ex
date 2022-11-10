@@ -1,5 +1,5 @@
 # the process will provide to-do server pids.
-# You give it a name, and it gives you the corresponding pro- cess.
+# You give it a name, and it gives you the corresponding server process.
 defmodule Todo.Cache do
 
   def start_link do

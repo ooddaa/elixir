@@ -16,7 +16,7 @@ defmodule Todo.Database.Worker do
   end
 
   def get(worker_id, key) do
-    IO.puts("worker #{worker_id} :gets to work")
+    IO.puts("worker #{worker_id} gets to work")
     GenServer.call(via_tuple(worker_id), {:get, key})
   end
 
