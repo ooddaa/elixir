@@ -22,5 +22,9 @@ pid
 |> Agent.cast(:adder , :add, [100])
 
 pid
-|> Agent.get(fn state -> state end)
+|> Agent.get_and_update(fn state -> { state, %{ state| count: state.count + 1 } } end)
 |> IO.inspect() # %{count: 101, name: :not_lol}
+
+pid
+|> Agent.get(fn state -> state end)
+|> IO.inspect() # %{count: 102, name: :not_lol}
