@@ -30,15 +30,15 @@ defmodule :data_agent do
   use Agent
 
   # def start_link, do: Agent.start_link(fn -> %{a: 1} end)
-  def start_link, do: Agent.start_link(fn -> %{a: 1} end, name: __MODULE__)
+  def start_link(_), do: Agent.start_link(fn -> %{a: 1} end, name: __MODULE__)
 
-  def child_spec(_) do
-    %{
-      id: __MODULE__, # set up id for multiple restarts in supervision tree
-      start: {__MODULE__, :start_link, []},
-      type: :supervisor,
-    }
-  end
+  # def child_spec(_) do
+  #   %{
+  #     id: __MODULE__, # set up id for multiple restarts in supervision tree
+  #     start: {__MODULE__, :start_link, []},
+  #     type: :supervisor,
+  #   }
+  # end
 
   def get(agent), do: Agent.get(agent, fn state -> state end)
   def get(agent, key), do: Agent.get(agent, fn state -> state[key] end)

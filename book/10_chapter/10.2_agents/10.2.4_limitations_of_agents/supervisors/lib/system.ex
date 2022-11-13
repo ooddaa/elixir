@@ -12,7 +12,7 @@ defmodule Todo.System do
       Todo.ProcessRegistry, # provides child_spec
       Todo.Database, # provides child_spec
       Todo.Cache, # provides GenServer child_spec
-      Todo.Metrics,
+      # Todo.Metrics,
       ], strategy: :one_for_one)
   end
 
