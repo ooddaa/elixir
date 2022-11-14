@@ -57,3 +57,5 @@ table |> :ets.match({ :"$1", true })
 # |> IO.inspect() # [["key2"], ["key2"]]
 table2 |> :ets.match({ :a, :"$999", :"$1", :_})
 # |> IO.inspect() # [[true, 1]]
+
+table2 |> :ets.next(:c) |> IO.inspect()
