@@ -22,26 +22,11 @@ defmodule :ekv do
     end
   end
 end
-# defmodule :ekv do
-#   use GenServer
 
-#   def start_link(table), do: GenServer.start_link(__MODULE__, table, name: __MODULE__)
+# mix run -e "Bench.run(:ekv)"
+# 3_304_229 operations/sec
+# 3_282_562 operations/sec
 
-#   def init(table) do
-#     { :ok, :ets.new(table, [:public, :named_table]) }
-#   end
-
-#   def info((table)) do
-#     IO.inspect(:ets.info(table))
-#   end
-
-#   def put(table, val) do
-#     table
-#     |> :ets.insert(val)
-#   end
-
-#   def get(table, key) do
-#     table
-#     |> :ets.lookup(key)
-#   end
-# end
+# mix run -e "Bench.run(:ekv, concurrency: 1000, num_updates: 100)"
+# 16_846_231 operations/sec
+# 15_727_343 operations/sec
