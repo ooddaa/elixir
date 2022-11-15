@@ -6,6 +6,7 @@ table |> :ets.insert({ %{ key3: "really cool" }, "anything"})
 
 table |> :ets.lookup("key1") |> IO.inspect()
 table |> :ets.lookup("key2") |> IO.inspect()
+table |> :ets.lookup("key3") |> IO.inspect(label: "key3")
 table |> :ets.lookup(%{ key3: "really cool" }) |> IO.inspect()
 
 table |> :ets.match_object({ :_, "anything"}) |> IO.inspect()
