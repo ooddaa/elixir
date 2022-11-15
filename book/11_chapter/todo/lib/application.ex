@@ -6,5 +6,8 @@ defmodule Todo.Application do
     children = [{Todo.System, nil}]
     opts = [strategy: :one_for_one, name: Todo.Hypervisor]
     Supervisor.start_link(children, opts)
+
+    # or just
+    # Todo.System.start_link(:lol)
   end
 end
