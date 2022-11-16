@@ -1,6 +1,5 @@
 defmodule Todo.Database do
   @db_folder "./data"
-  @pool_size 3
 
   # CLIENT
   def start_link do
@@ -34,7 +33,7 @@ defmodule Todo.Database do
 
   ## this won't work - circular call to Todo.Database ?
   # def child_spec(_) do
-  #   Supervisor.child_spec(
+  #   Supervisor.child_spec(ge
   #     # __MODULE__,
   #     Todo.Database,
   #     id: __MODULE__,
