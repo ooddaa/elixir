@@ -30,11 +30,14 @@ defmodule Todo.Web do
       |> String.to_atom()
       |> Todo.Cache.server_process()
       |> Todo.Server.entries(date)
-      |> IO.inspect(label: "response")
+      |> IO.inspect(label: "response") # [%{date: ~D[2022-11-16], id: 1, title: "Yo"}]
 
     conn
     |> Plug.Conn.put_resp_content_type("text/plain")
-    |> Plug.Conn.send_resp(200, "OK")
+    |> Plug.Conn.send_resp(
+      200,
+      resp |> Enum.map(&("#{&1.date} #{&1.title}")) |> Enum.join("\n")
+      )
   end
 
   def child_spec(_) do

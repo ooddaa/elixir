@@ -37,6 +37,11 @@ defmodule SimpleRegistry do
   end
 
   @impl GenServer
+  def handle_info({:EXIT, pid, :killed}, process_registry) do
+    IO.inspect("#{inspect pid} was killed")
+    {:noreply, deregister_pid(process_registry, pid)}
+  end
+  @impl GenServer
   def handle_info({:EXIT, pid, _reason}, process_registry) do
     {:noreply, deregister_pid(process_registry, pid)}
   end
@@ -44,6 +49,7 @@ defmodule SimpleRegistry do
   defp deregister_pid(process_registry, pid) do
     # We'll walk through each {key, value} item, and keep those elements whose
     # value is different to the provided pid.
+    IO.inspect("deregistering #{inspect pid}")
     process_registry
     |> Enum.reject(fn {_key, registered_process} -> registered_process == pid end)
     |> Enum.into(%{})
