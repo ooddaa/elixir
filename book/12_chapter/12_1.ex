@@ -20,3 +20,13 @@ defmodule Yo do
     puts "hello from #{node()}"
   end
 end
+
+# from :oda1@oda1
+# Node.connect(:oda2@oda1)
+# Node.spawn(:oda2@oda1, Yo, :hello, [])
+# send({:shell, :oda2@oda1}, "heh1")
+# flush()
+
+# HOW DO I OBTAIN PID OF A PROCESS RUNNING ON ANOTHER NODE?
+# :global.register_name({:name, "yo"}, pid)
+# :global.whereis_name({:name, "yo"})
