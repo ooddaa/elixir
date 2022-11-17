@@ -20,7 +20,7 @@ defmodule Todo.Web do
     |> Plug.Conn.send_resp(200, "OK")
   end
 
-  post "/get_date" do
+  get "/entries" do
     conn = Plug.Conn.fetch_query_params(conn)
     list_name = Map.fetch!(conn.params, "list")
     date = Date.from_iso8601!(Map.fetch!(conn.params, "date"))
@@ -43,7 +43,7 @@ defmodule Todo.Web do
   def child_spec(_) do
     Plug.Adapters.Cowboy.child_spec(
       scheme: :http,
-      options: [port: 5454],
+      options: [port: Application.fetch_env!(:todo, :http_port)],
       plug: __MODULE__,
     )
   end
