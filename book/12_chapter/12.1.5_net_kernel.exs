@@ -76,6 +76,7 @@ false
 
 # :lol@oda1 is changing cookie on ALREADY CONNECTED nodes.
 Node.spawn(:a@oda1, fn -> :erlang.set_cookie(:a@oda1, :AAAAAAAAAAAAAAAAAAAA) end)
+# same as Node.spawn(:a@oda1, fn -> Node.set_cookie(:AAAAAAAAAAAAAAAAAAAA) end)
 # after that the hidden node with cookie A can connect to :a@oda1
 Node.connect(:a@oda1)
 true
