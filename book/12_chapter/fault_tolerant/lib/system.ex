@@ -9,26 +9,13 @@ defmodule Todo.System do
 
   def init(_) do
     Supervisor.init([
-      Todo.ProcessRegistry, # provides child_spec
+      # Todo.ProcessRegistry, # provides child_spec
       Todo.Database, # provides child_spec
       Todo.Cache, # provides GenServer child_spec
       # Todo.Metrics,
-      Todo.Web
+      # Todo.Web
       ], strategy: :one_for_one)
   end
-
-  # def init(_) do
-  #   Supervisor.init([
-  #     Todo.ProcessRegistry,
-  #     # or define child_spec(_) in Todo.Database
-  #     %{
-  #       id: Todo.Database,
-  #       start: { Todo.Database, :start_link, [] },
-  #       type: :supervisor,
-  #     },
-  #     Todo.Cache,
-  #     ], strategy: :one_for_one)
-  # end
 end
 
 # defmodule Todo.System do

@@ -1,11 +1,10 @@
 defmodule Todo.Server do
   use GenServer, restart: :temporary
-  @expiry_idle_timeout :timer.seconds(30)
+  # @expiry_idle_timeout :timer.seconds(30)
 
   # CLIENT
   def start_link(todo_list_name) do
     IO.puts("Starting to-do server for #{todo_list_name}.")
-    # GenServer.start_link(__MODULE__, todo_list_name, name: todo_list_name)
     GenServer.start_link(__MODULE__, todo_list_name, name: {:global, {__MODULE__, todo_list_name}})
   end
 
@@ -33,7 +32,7 @@ defmodule Todo.Server do
     {
       :ok,
       {todo_list_name, Todo.Database.get(todo_list_name) || Todo.List.new()},
-      @expiry_idle_timeout
+      # @expiry_idle_timeout
     }
   end
 
@@ -41,12 +40,17 @@ defmodule Todo.Server do
   def handle_cast({:add_entry, new_entry}, { todo_list_name, todo_list }) do
     new_todolist = Todo.List.add_entry(todo_list, new_entry)
     Todo.Database.store(todo_list_name, new_todolist)
-    {:noreply, { todo_list_name, new_todolist }, @expiry_idle_timeout}
+    {:noreply,
+    { todo_list_name, new_todolist },
+    # @expiry_idle_timeout
+  }
   end
 
   @impl GenServer
   def handle_call({:entries, date}, _from, { todo_list_name, todo_list }) do
-    {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list }, @expiry_idle_timeout}
+    {:reply, Todo.List.entries(todo_list, date), { todo_list_name, todo_list },
+    # @expiry_idle_timeout
+  }
   end
 
   @impl GenServer

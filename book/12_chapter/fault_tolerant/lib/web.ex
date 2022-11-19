@@ -47,6 +47,4 @@ defmodule Todo.Web do
       plug: __MODULE__,
     )
   end
-
-
 end
