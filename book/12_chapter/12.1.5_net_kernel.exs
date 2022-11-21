@@ -83,3 +83,6 @@ true
 # AND :lol@oda1 still communicates with :a@oda1 although they have diff cookies
 iex(a@oda1)8> Node.list([:hidden, :visible])
 [:oda@oda1, :lol@oda1, :hid@oda1]
+
+# https://www.erlang.org/doc/man/net_kernel.html#monitor_nodes-1
+:net_kernel.monitor_nodes(true)

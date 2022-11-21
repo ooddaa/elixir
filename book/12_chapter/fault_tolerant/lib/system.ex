@@ -13,7 +13,7 @@ defmodule Todo.System do
       Todo.Database, # provides child_spec
       Todo.Cache, # provides GenServer child_spec
       # Todo.Metrics,
-      # Todo.Web
+      Todo.Web
       ], strategy: :one_for_one)
   end
 end

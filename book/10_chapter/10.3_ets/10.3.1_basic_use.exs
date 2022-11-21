@@ -10,7 +10,6 @@ table |> :ets.lookup("key3") |> IO.inspect(label: "key3")
 table |> :ets.lookup(%{ key3: "really cool" }) |> IO.inspect()
 
 table |> :ets.match_object({ :_, "anything"}) |> IO.inspect()
-
 table |> :ets.delete("key2") |> IO.inspect() # true
 table |> :ets.lookup("key2") |> IO.inspect() # []
 # table |> :ets.lookup() |> IO.inspect() # deletes whole table
@@ -28,3 +27,8 @@ table |> :ets.next(:ets.first(table)) |> IO.inspect() # %{key3: "really cool"}
 # new_owner must handle_info(:"ETS_TRANSFER", table_ref, sender_pid, msg_data)
 # 19:55:18.201 [error] Agent.Server #PID<0.114.0> received unexpected message in handle_info/2: {:"ETS-TRANSFER", #Reference<0.4226194934.3156344835.231865>, #PID<0.106.0>,
 # handy to give_away table when GenServer terminates to persist state
+
+set = :ets.new(:set, []) # it's [:set] by default, so I omit it# it's [:set] by default, so I omit it  
+# SET
+[1,2,3,1] |> Enum.map(&:ets.insert(set, { &1 })) # insert values as keys, duplicates will be dropped 
+set |> :ets.info(:size) # 3 == unique keys

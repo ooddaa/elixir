@@ -5,9 +5,8 @@ defmodule Todo.Database do
 
     # Node name is used to determine the database folder. This allows us to
     # start multiple nodes from the same folders, and data will not clash.
-    [name_prefix, _] = "#{node()}" |> String.split("@")
-    db_folder = "#{Keyword.fetch!(db_settings, :folder)}/#{name_prefix}/"
 
+    db_folder = get_nodes_db_folder(node())
     File.mkdir_p!(db_folder)
 
     :poolboy.child_spec(
@@ -46,5 +45,42 @@ defmodule Todo.Database do
   @spec get(any) :: any
   def get(key) do
     :poolboy.transaction(__MODULE__, fn worker_pid -> Todo.Database.Worker.get(worker_pid, key) end)
+  end
+
+  defp get_nodes_db_folder(node) do
+    db_settings = Application.fetch_env!(:todo, :database)
+    [name_prefix, _] = "#{node}" |> String.split("@")
+    "#{Keyword.fetch!(db_settings, :folder)}/#{name_prefix}/"
+  end
+
+  @doc """
+  syncs db folder with the given node
+  """
+  def sync(source_node) do
+    IO.puts("Found source node #{source_node |> to_string()}")
+    source_db = get_nodes_db_folder(source_node)
+    target_db = get_nodes_db_folder(node())
+
+    case File.exists?(source_db) do
+      true ->
+        {:ok, files} = File.ls(source_db)
+        IO.puts("Copying files: #{inspect files}")
+        File.cp_r(source_db, target_db, on_conflict: fn source, destination ->
+          case IO.gets("Overwriting #{destination} by #{source}. Type y/N to confirm/CANCEL. ") do
+            "y\n" ->
+              IO.puts("Overwritten")
+              true
+            "N\n" ->
+              IO.puts("Cancelled")
+              false
+            _ ->
+              IO.puts("Aborted")
+              false
+          end
+        end)
+
+      false ->
+        IO.puts("Cannot find #{source_db}")
+    end
   end
 end
